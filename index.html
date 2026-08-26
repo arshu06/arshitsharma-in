@@ -4,17 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Arshit Sharma</title>
-<meta name="description" content="One question for every dish: would I order it again? The Reorder is the answer.">
+<meta name="description" content="Restaurant reviews scored out of thirty, and whatever else I am working on.">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <header class="masthead">
   <a class="name" href="/">Arshit Sharma</a>
-  <p class="tagline">Would I order it again?</p>
   <nav>
     <ul>
-      <li><a href="/" aria-current="page">Reviews</a></li>
+      <li><a href="/" aria-current="page">Latest</a></li>
+      <li><a href="/eating.html">Food reviews</a></li>
       <li><a href="/how-i-rate.html">How I rate</a></li>
       <li><a href="/about.html">About</a></li>
     </ul>
@@ -23,21 +23,41 @@
 
 <main class="wrap">
 
-  <article class="entry">
-    <a href="/reviews/farzi-cafe-connaught-place.html">
+  <p class="intro">I live in Himachal and come down to Chandigarh and Mohali a couple of times a month, mostly to see friends and mostly to eat. I score every restaurant I go to and publish the working. Other things I am building will end up here too.</p>
+
+  <p class="sec-label">Food reviews</p>
+
+  <a class="feature" href="/eating.html">
+    <img src="images/oven-fresh/spread.jpg" alt="A table of food at Oven Fresh, Mohali"
+         onerror="this.outerHTML='&lt;div class=\'ph\'&gt;images/oven-fresh/spread.jpg&lt;/div&gt;'">
+    <div class="fx">
+      <h2>Would I order it again?</h2>
+      <p>Every dish gets one question, and the answer across the table is the rating. Two dishes out of four I would have again is 2 in 4. No stars, no tomatoes, no counting little shapes.</p>
+      <span class="go">Read the reviews &rarr;</span>
+    </div>
+  </a>
+
+  <p class="sec-label">Latest</p>
+
+  <a class="post" href="/reviews/farzi-cafe-connaught-place.html">
+    <img src="images/farzi/pizza.jpg" alt="Bageecha taftan pizza at Farzi Cafe"
+         onerror="this.outerHTML='&lt;div class=\'ph\'&gt;&lt;/div&gt;'">
+    <div>
       <h3>Farzi Cafe, Connaught Place</h3>
       <p class="kicker">The best thing I ate was a Coke Zero.</p>
-      <p class="meta"><span class="score">0 in 4</span> · Don't · 16 / 30 · ₹878 a head · Modern Indian · Delhi</p>
-    </a>
-  </article>
+      <p class="meta"><span class="score">0 in 4</span> &middot; Don't &middot; 16 / 30 &middot; ₹878 a head &middot; Delhi</p>
+    </div>
+  </a>
 
-  <article class="entry">
-    <a href="/reviews/oven-fresh-hlp-galleria.html">
+  <a class="post" href="/reviews/oven-fresh-hlp-galleria.html">
+    <img src="images/oven-fresh/enchilada.jpg" alt="Chicken enchilada at Oven Fresh"
+         onerror="this.outerHTML='&lt;div class=\'ph\'&gt;&lt;/div&gt;'">
+    <div>
       <h3>Oven Fresh, HLP Galleria</h3>
       <p class="kicker">A better Chili's than Chili's, by a single point.</p>
-      <p class="meta"><span class="score">2 in 3</span> · Go · 23 / 30 · ₹650 a head · Continental · Mohali</p>
-    </a>
-  </article>
+      <p class="meta"><span class="score">2 in 3</span> &middot; Go &middot; 23 / 30 &middot; ₹650 a head &middot; Mohali</p>
+    </div>
+  </a>
 
 </main>
 
