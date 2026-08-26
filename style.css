@@ -221,3 +221,23 @@ footer p{margin-bottom:10px}
   .post img,.post .ph{width:92px;height:69px}
   .post h3{font-size:1.12rem}
 }
+
+
+/* ---- photographs ---- */
+.lead{display:block;text-decoration:none;color:inherit;margin-bottom:clamp(34px,5vw,52px)}
+.lead img{width:100%;height:auto;aspect-ratio:2/1;object-fit:cover}
+.lead .cap{
+  display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  font-family:var(--mono);font-size:.74rem;color:var(--faint);margin-top:10px;
+}
+.lead .cap .go{color:var(--mark);text-transform:uppercase;letter-spacing:.06em}
+.lead:hover .cap .go{text-decoration:underline}
+.lead .ph{width:100%;aspect-ratio:2/1;background:var(--wash);border:1px dashed var(--rule);display:grid;place-items:center;font-family:var(--mono);font-size:.74rem;color:var(--faint)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:clamp(12px,2vw,20px)}
+.grid figure{margin:0}
+.grid img{width:100%;aspect-ratio:4/3;object-fit:cover}
+.grid .ph{width:100%;aspect-ratio:4/3;background:var(--wash);border:1px dashed var(--rule)}
+.grid figcaption{font-family:var(--mono);font-size:.72rem;color:var(--faint);margin-top:8px;line-height:1.55}
+.grid figure.tall{grid-column:span 2}
+@media (max-width:560px){.grid figure.tall{grid-column:span 1}}
