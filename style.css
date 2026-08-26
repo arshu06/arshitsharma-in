@@ -177,6 +177,33 @@ footer p{margin-bottom:10px}
   padding-bottom:10px;border-bottom:1px solid var(--rule);margin-bottom:24px;
 }
 
+/* ---- photograph strip on the front page ---- */
+.strip{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:clamp(8px,1.5vw,14px);margin-top:clamp(10px,1.5vw,14px);
+}
+.strip a{display:block}
+.strip img{width:100%;aspect-ratio:4/3;object-fit:cover}
+.strip .ph{width:100%;aspect-ratio:4/3;font-size:.58rem;padding:5px}
+
+/* ---- notes teaser ---- */
+.teaser{
+  display:block;text-decoration:none;color:inherit;
+  border:1px dashed var(--rule);background:var(--wash);
+  padding:22px 24px;
+}
+.teaser-t{
+  display:block;font-family:var(--display);font-weight:600;
+  font-size:1.3rem;letter-spacing:-.015em;margin-bottom:6px;
+}
+.teaser-d{display:block;color:var(--muted);font-size:.98rem;max-width:52ch;margin-bottom:12px}
+.teaser .go{
+  font-family:var(--mono);font-size:.75rem;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--mark);
+}
+.teaser:hover{border-color:var(--mark)}
+.teaser:hover .teaser-t{color:var(--mark)}
+
 .more{
   display:inline-block;margin-top:20px;
   font-family:var(--mono);font-size:.75rem;letter-spacing:.06em;
@@ -220,6 +247,8 @@ footer p{margin-bottom:10px}
 
 @media (max-width:520px){
   body{font-size:17px}
+  nav ul{gap:14px 16px}
+  nav a{font-size:.94rem}
   .post{grid-template-columns:92px 1fr;gap:14px}
   .post img,.post .ph{width:92px;height:69px}
   .post h2{font-size:1.12rem}
