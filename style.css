@@ -177,6 +177,13 @@ footer p{margin-bottom:10px}
   padding-bottom:10px;border-bottom:1px solid var(--rule);margin-bottom:24px;
 }
 
+.more{
+  display:inline-block;margin-top:20px;
+  font-family:var(--mono);font-size:.75rem;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--mark);text-decoration:none;
+}
+.more:hover{text-decoration:underline}
+
 .post{
   display:grid;grid-template-columns:132px 1fr;gap:20px;
   text-decoration:none;color:inherit;
