@@ -1,0 +1,41 @@
+name: Build site
+
+# Runs on every push to main. If the build fails, nothing is committed and
+# this shows as a red cross on the commit. Cloudflare keeps serving the last
+# good version.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:        # lets you run it by hand from the Actions tab
+
+permissions:
+  contents: write
+
+concurrency:                # never let two builds fight over the same push
+  group: build-site
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Build
+        run: python3 build.py
+
+      - name: Commit anything that changed
+        run: |
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "Nothing changed. Site was already current."
+            exit 0
+          fi
+          git config user.name  "site builder"
+          git config user.email "actions@github.com"
+          git add -A
+          git commit -m "build: refresh header, footer and card lists"
+          git push
