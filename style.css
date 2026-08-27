@@ -178,8 +178,10 @@ footer p{margin-bottom:10px}
 .sec-label{
   font-family:var(--mono);font-size:.68rem;letter-spacing:.18em;
   text-transform:uppercase;color:var(--faint);
-  padding-bottom:10px;border-bottom:1px solid var(--rule);margin-bottom:24px;
+  padding-bottom:10px;border-bottom:1px solid var(--rule);
+  margin:clamp(40px,6vw,62px) 0 24px;
 }
+main > .sec-label:first-child{margin-top:0}
 
 /* ---- photograph strip on the front page ---- */
 .strip{
@@ -193,8 +195,9 @@ footer p{margin-bottom:10px}
 /* ---- notes teaser ---- */
 .teaser{
   display:block;text-decoration:none;color:inherit;
-  border:1px dashed var(--rule);background:var(--wash);
-  padding:22px 24px;
+  border:1px solid var(--rule);border-left:3px solid var(--mark);
+  background:var(--wash);
+  padding:24px 26px;
 }
 .teaser-t{
   display:block;font-family:var(--display);font-weight:600;
@@ -234,7 +237,7 @@ footer p{margin-bottom:10px}
 .lead img{width:100%;height:auto;aspect-ratio:2/1;object-fit:cover}
 .lead .cap{
   display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
-  font-family:var(--mono);font-size:.74rem;color:var(--faint);margin-top:10px;
+  font-family:var(--mono);font-size:.8rem;color:var(--muted);margin-top:12px;
 }
 .lead .cap .go{color:var(--mark);text-transform:uppercase;letter-spacing:.06em}
 .lead:hover .cap .go{text-decoration:underline}
