@@ -227,9 +227,10 @@ def build(write=True):
     header_t = (PARTIALS / "header.html").read_text(encoding="utf-8").strip("\n")
     footer_t = (PARTIALS / "footer.html").read_text(encoding="utf-8").strip("\n")
 
+    # Keep going even if metadata is broken. We are not writing anything while
+    # errors exist, so it is safe to carry on and collect every problem in one
+    # pass rather than making you fix them one push at a time.
     items = collect_content()
-    if errors:
-        return []
 
     planned = []
     for p in pages():
