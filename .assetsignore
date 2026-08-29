@@ -1,0 +1,6 @@
+.git/
+.github/
+_partials/
+build.py
+README-build.md
+wrangler.toml
