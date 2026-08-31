@@ -194,6 +194,44 @@ figure.missing::before{
   letter-spacing:.03em;color:var(--ink);margin-bottom:3px;
 }
 
+/* ---- reply form ----
+   appearance:none and border-radius:0 are not cosmetic. without them iOS
+   Safari draws its own rounded, inner-shadowed inputs and ignores the rest
+   of this block. font:inherit keeps the box at 18px, which also stops iOS
+   zooming the page when a field is focused. */
+.reply{
+  border-top:1px solid var(--rule);
+  margin-top:clamp(44px,7vw,68px);
+  padding-top:24px;
+}
+.reply h2{margin-top:0}
+.reply .note{color:var(--muted);font-size:.95rem;max-width:52ch;margin-bottom:24px}
+.reply label{
+  display:block;font-family:var(--mono);font-size:.66rem;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--faint);
+  margin-bottom:7px;
+}
+.reply textarea,
+.reply input[type=text],
+.reply input[type=email]{
+  -webkit-appearance:none;appearance:none;border-radius:0;
+  display:block;width:100%;
+  font:inherit;line-height:1.5;color:var(--ink);
+  background:var(--wash);border:1px solid var(--rule);
+  padding:11px 13px;margin-bottom:22px;
+}
+.reply textarea{min-height:150px;resize:vertical}
+.reply textarea:focus,
+.reply input:focus{outline:none;border-color:var(--mark);background:var(--bg)}
+.reply button{
+  -webkit-appearance:none;appearance:none;border-radius:0;
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;
+  text-transform:uppercase;color:#fff;background:var(--ink);
+  border:1px solid var(--ink);padding:13px 24px;cursor:pointer;
+}
+.reply button:hover{background:var(--mark);border-color:var(--mark)}
+.reply .hp{position:absolute;left:-9999px}
+
 /* ---- footer ---- */
 footer{
   margin-top:clamp(48px,7vw,76px);padding:28px 0 64px;
