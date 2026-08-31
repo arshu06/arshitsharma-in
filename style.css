@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&family=IBM+Plex+Mono:wght@400;500&display=swap');
-
 :root{
   --bg:#FFFFFF;
   --ink:#1A1A1A;
@@ -80,6 +78,17 @@ h2{
   font-size:1.5rem;letter-spacing:-.01em;
   margin:44px 0 14px;
 }
+/* a day heading sitting straight on top of a section heading reads as two
+   unrelated sections. where one h2 is immediately followed by another, the
+   first one is a day marker, so make it small and quiet and close the gap.
+   browsers without :has() fall back to exactly what you have now. */
+h2:has(+ h2){
+  font-family:var(--mono);font-weight:500;font-size:.68rem;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--faint);
+  margin-bottom:4px;
+}
+h2:has(+ h2) + h2{margin-top:0}
+
 .date{font-family:var(--mono);font-size:.8rem;color:var(--faint);letter-spacing:.02em;margin-bottom:6px}
 
 p{margin-bottom:20px}
@@ -162,6 +171,28 @@ figure.missing::before{
 
 /* ---- rating page ---- */
 .band{font-family:var(--mono);font-size:.82rem;color:var(--muted);margin:4px 0 18px;line-height:1.8}
+
+/* ---- edits ----
+   corrections are apparatus, not prose. quieter and set off from the piece
+   above, so a reader can see where the note ends and the record of what
+   changed begins. wrap the heading and its paragraphs in
+   <section class="edits"> on any note that carries one. */
+.edits{
+  border-top:1px solid var(--rule);
+  margin-top:clamp(40px,6vw,60px);
+  padding-top:6px;
+}
+.edits h2{
+  font-family:var(--mono);font-weight:500;font-size:.68rem;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--faint);
+  margin:0 0 18px;
+}
+.edits p{font-size:.95rem;line-height:1.6;color:var(--muted);margin-bottom:16px}
+.edits p:last-child{margin-bottom:0}
+.edits p strong{
+  display:block;font-family:var(--mono);font-weight:500;font-size:.72rem;
+  letter-spacing:.03em;color:var(--ink);margin-bottom:3px;
+}
 
 /* ---- footer ---- */
 footer{
