@@ -147,6 +147,35 @@
 
   <p>If you want the photograph for your story, it is still the best-looking room on this list. Go, take the picture, eat somewhere else.</p>
 
+<!--#reply-->
+  <section class="reply">
+    <h2>Reply</h2>
+    <p class="note">If you want to say something about this one, correct me, or
+    tell me I have got a price wrong, this goes straight to my inbox. Nothing is
+    published here automatically. If it turns into a correction it goes in the
+    Edits section with your name on it, or without, whichever you prefer.</p>
+    <form action="https://api.web3forms.com/submit" method="POST">
+      <input type="hidden" name="access_key" value="127a2d84-9ea3-45c1-983c-66b519895517">
+      <input type="hidden" name="subject" value="Reply: Farzi Cafe, Connaught Place">
+      <input type="hidden" name="from_name" value="arshitsharma.in">
+      <input type="hidden" name="page" value="https://arshitsharma.in/reviews/farzi-cafe-connaught-place.html">
+      <input type="hidden" name="redirect" value="https://arshitsharma.in/thanks.html">
+      <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off">
+
+      <label for="r-message">What you want to say</label>
+      <textarea id="r-message" name="message" required></textarea>
+
+      <label for="r-name">Your name</label>
+      <input id="r-name" type="text" name="name" required autocomplete="name">
+
+      <label for="r-email">Email, so I can reply</label>
+      <input id="r-email" type="email" name="email" required autocomplete="email">
+
+      <button type="submit">Send it</button>
+    </form>
+  </section>
+<!--#/reply-->
+
 <!--#nav-->
   <nav class="pagenav">
     <a class="prev" href="/reviews/oven-fresh-hlp-galleria.html"><span>Previous</span>Oven Fresh, HLP Galleria</a>
