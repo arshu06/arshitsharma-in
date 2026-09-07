@@ -393,11 +393,15 @@ def build(write=True):
                 else:
                     err(rel(p), "no </main>, cannot place the nav markers")
             if "<!--#reply-->" not in text:
-                where = "<!--#nav-->" if "<!--#nav-->" in text else "</main>"
                 text = text.replace(
-                    where, "<!--#reply-->\n<!--#/reply-->\n\n" + where, 1)
-            text, _ = replace_block(text, "reply", reply_form(mine))
+                    "</main>", "<!--#reply-->\n<!--#/reply-->\n\n</main>", 1)
+            # nav sits above the form: reading first, then the thing you do
+            # once you have finished reading.
+            if "<!--#nav-->" not in text:
+                text = text.replace(
+                    "<!--#reply-->", "<!--#nav-->\n<!--#/nav-->\n\n<!--#reply-->", 1)
             text, _ = replace_block(text, "nav", nav_for(mine, items))
+            text, _ = replace_block(text, "reply", reply_form(mine))
 
         for m in re.finditer(r"<!--#cards:([a-z]+:[a-z0-9]+)-->", text):
             text, _ = replace_block(text, "cards:" + m.group(1),
