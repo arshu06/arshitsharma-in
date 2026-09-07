@@ -7,7 +7,11 @@ pair is copied through byte for byte, so this cannot touch your prose.
 
     python3 build.py            build, but only if nothing is broken
     python3 build.py --check    say what would change, write nothing
-    python3 build.py --init     one time: add markers and metadata to pages
+
+New pages are made by copying an existing one. The <title> and the
+<meta name="description"> go ABOVE <!--#head-->, never between the markers,
+because everything between them is replaced by _partials/head.html on
+every build.
 
 Markers
     <!--#head-->      ... <!--#/head-->      shared <head> lines
@@ -278,13 +282,13 @@ def build(write=True):
 
         for name, body in (("head", head), ("header", header), ("footer", footer_t)):
             if block(text, name) is None:
-                err(rel(p), f"no <!--#{name}--> markers, run --init")
+                err(rel(p), f"no <!--#{name}--> markers, copy them from another page")
                 continue
             text, _ = replace_block(text, name, "\n" + body + "\n")
 
         # previous / next. if the page has no markers yet we add an empty
-        # pair before </main>. that insertion only ever adds, so unlike --init
-        # it cannot swallow anything that was already on the page.
+        # pair before </main>. that insertion only ever adds, so unlike the old
+        # --init it cannot swallow anything that was already on the page.
         mine = next((i for i in items if i["path"] == rel(p)), None)
         if mine:
             if "<!--#nav-->" not in text:
@@ -312,63 +316,19 @@ def build(write=True):
     return planned
 
 
-# ---------------------------------------------------------------- init
-
-def init():
-    """One time. Wrap the existing header, footer and head lines in markers."""
-    touched = []
-    for p in pages():
-        text = original = p.read_text(encoding="utf-8")
-
-        if "<!--#head-->" not in text:
-            m = re.search(
-                r'<meta charset.*?<link rel="stylesheet" href="[^"]+">',
-                text, re.S)
-            if m:
-                text = text[:m.start()] + "<!--#head-->\n" + m.group(0) + \
-                       "\n<!--#/head-->" + text[m.end():]
-            else:
-                err(rel(p), "could not find the head block to wrap")
-
-        if "<!--#header-->" not in text:
-            m = re.search(r'<header class="masthead">.*?</header>', text, re.S)
-            if m:
-                text = text[:m.start()] + "<!--#header-->\n" + m.group(0) + \
-                       "\n<!--#/header-->" + text[m.end():]
-            else:
-                err(rel(p), "could not find the masthead to wrap")
-
-        if "<!--#footer-->" not in text:
-            m = re.search(r'<footer class="wrap">.*?</footer>', text, re.S)
-            if m:
-                text = text[:m.start()] + "<!--#footer-->\n" + m.group(0) + \
-                       "\n<!--#/footer-->" + text[m.end():]
-            else:
-                err(rel(p), "could not find the footer to wrap")
-
-        if text != original:
-            p.write_text(text, encoding="utf-8")
-            touched.append(rel(p))
-    return touched
-
-
 # ---------------------------------------------------------------- main
 
 def main():
     mode = sys.argv[1] if len(sys.argv) > 1 else ""
 
     if mode == "--init":
-        touched = init()
-        for t in touched:
-            print("  markers added:", t)
-        if errors:
-            print("\nPROBLEMS")
-            for e in errors:
-                print("  ", e)
-            return 1
-        print(f"\n{len(touched)} files given markers. Now add the x- metadata "
-              "to everything in reviews/ and notes/, then run the build.")
-        return 0
+        print("--init has been removed. It wrapped the shared <head> lines in\n"
+              "markers by pattern, and the pattern was wrong: it swallowed the\n"
+              "<title> and <meta name=description> of twelve pages, which the\n"
+              "next build then overwrote with the shared partial.\n\n"
+              "To add markers to a new page, copy an existing one. The <title>\n"
+              "and description belong ABOVE <!--#head-->, never inside it.")
+        return 1
 
     planned = build(write=(mode != "--check"))
 
