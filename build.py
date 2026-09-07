@@ -18,6 +18,7 @@ Markers
     <!--#header-->    ... <!--#/header-->    masthead and nav
     <!--#footer-->    ... <!--#/footer-->    footer
     <!--#nav-->       ... <!--#/nav-->       previous / next, added for you
+    <!--#reply-->     ... <!--#/reply-->     reply form, added for you
     <!--#cards:KIND:N--> ... <!--#/cards-->  generated card list
                                              KIND is review|note, N is a
                                              number or the word all
@@ -37,6 +38,9 @@ import sys
 import html
 from datetime import date
 from pathlib import Path
+
+SITE = "https://arshitsharma.in"
+FORM_KEY = "127a2d84-9ea3-45c1-983c-66b519895517"   # web3forms, public by design
 
 ROOT = Path(__file__).parent.resolve()
 PARTIALS = ROOT / "_partials"
@@ -212,6 +216,97 @@ def nav_for(item, items):
     return "".join(out)
 
 
+# ---------------------------------------------------------------- feed
+
+DAYS = ("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
+MONTHS = ("Jan", "Feb", "Mar", "Apr", "May", "Jun",
+          "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+
+
+def rfc822(d):
+    """RSS wants this exact shape, and strftime is locale dependent."""
+    return (f"{DAYS[d.weekday()]}, {d.day:02d} {MONTHS[d.month - 1]} "
+            f"{d.year} 09:00:00 +0530")
+
+
+def xml_escape(t):
+    return (t.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"))
+
+
+def write_feed(items, write=True):
+    """feed.xml, from the same metadata the cards use. Drafts stay out."""
+    live = [i for i in items if not i["draft"]][:30]
+    rows = []
+    for i in live:
+        rows.append(
+            "  <item>\n"
+            f"    <title>{xml_escape(i['title'])}</title>\n"
+            f"    <link>{SITE}{i['url']}</link>\n"
+            f"    <guid isPermaLink=\"true\">{SITE}{i['url']}</guid>\n"
+            f"    <pubDate>{rfc822(i['date'])}</pubDate>\n"
+            f"    <description>{xml_escape(i['kicker'])}</description>\n"
+            "  </item>"
+        )
+    built = rfc822(live[0]["date"]) if live else rfc822(date.today())
+    feed = (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">\n'
+        "<channel>\n"
+        "  <title>Arshit Sharma</title>\n"
+        f"  <link>{SITE}/</link>\n"
+        "  <description>Weekly notes, photographs, restaurant reviews, "
+        "and whatever else I feel like.</description>\n"
+        "  <language>en</language>\n"
+        f'  <atom:link href="{SITE}/feed.xml" rel="self" '
+        'type="application/rss+xml"/>\n'
+        f"  <lastBuildDate>{built}</lastBuildDate>\n"
+        + "\n".join(rows) + "\n"
+        "</channel>\n"
+        "</rss>\n"
+    )
+    target = ROOT / "feed.xml"
+    changed = (not target.exists()) or target.read_text(encoding="utf-8") != feed
+    if changed and write:
+        target.write_text(feed, encoding="utf-8")
+    return changed
+
+
+# ---------------------------------------------------------------- reply form
+
+def reply_form(item):
+    """One form per page. The hidden subject tells you which page it came
+    from, so a reply to Wk 34 does not arrive looking like every other one."""
+    subject = f"Reply: {item['title']}"
+    return f'''
+  <section class="reply">
+    <h2>Reply</h2>
+    <p class="note">If you want to say something about this one, correct me, or
+    tell me I have got a price wrong, this goes straight to my inbox. Nothing is
+    published here automatically. If it turns into a correction it goes in the
+    Edits section with your name on it, or without, whichever you prefer.</p>
+    <form action="https://api.web3forms.com/submit" method="POST">
+      <input type="hidden" name="access_key" value="{FORM_KEY}">
+      <input type="hidden" name="subject" value="{subject}">
+      <input type="hidden" name="from_name" value="arshitsharma.in">
+      <input type="hidden" name="page" value="{SITE}{item["url"]}">
+      <input type="hidden" name="redirect" value="{SITE}/thanks.html">
+      <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off">
+
+      <label for="r-message">What you want to say</label>
+      <textarea id="r-message" name="message" required></textarea>
+
+      <label for="r-name">Your name</label>
+      <input id="r-name" type="text" name="name" required autocomplete="name">
+
+      <label for="r-email">Email, so I can reply</label>
+      <input id="r-email" type="email" name="email" required autocomplete="email">
+
+      <button type="submit">Send it</button>
+    </form>
+  </section>
+'''
+
+
 # ---------------------------------------------------------------- checker
 
 def check_links(path, text):
@@ -297,6 +392,11 @@ def build(write=True):
                         "</main>", "<!--#nav-->\n<!--#/nav-->\n\n</main>", 1)
                 else:
                     err(rel(p), "no </main>, cannot place the nav markers")
+            if "<!--#reply-->" not in text:
+                where = "<!--#nav-->" if "<!--#nav-->" in text else "</main>"
+                text = text.replace(
+                    where, "<!--#reply-->\n<!--#/reply-->\n\n" + where, 1)
+            text, _ = replace_block(text, "reply", reply_form(mine))
             text, _ = replace_block(text, "nav", nav_for(mine, items))
 
         for m in re.finditer(r"<!--#cards:([a-z]+:[a-z0-9]+)-->", text):
@@ -310,9 +410,13 @@ def build(write=True):
     if errors:
         return []
 
+    if write_feed(items, write) and not any(x[0].name == "feed.xml" for x in planned):
+        planned.append((ROOT / "feed.xml", None))
+
     if write:
         for p, text in planned:
-            p.write_text(text, encoding="utf-8")
+            if text is not None:
+                p.write_text(text, encoding="utf-8")
     return planned
 
 
