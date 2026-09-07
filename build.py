@@ -13,6 +13,7 @@ Markers
     <!--#head-->      ... <!--#/head-->      shared <head> lines
     <!--#header-->    ... <!--#/header-->    masthead and nav
     <!--#footer-->    ... <!--#/footer-->    footer
+    <!--#nav-->       ... <!--#/nav-->       previous / next, added for you
     <!--#cards:KIND:N--> ... <!--#/cards-->  generated card list
                                              KIND is review|note, N is a
                                              number or the word all
@@ -186,6 +187,27 @@ def cards_for(spec, items):
     return "\n" + "\n".join(card(i) for i in chosen)
 
 
+def nav_for(item, items):
+    """The older and newer entry of the same kind. Items are newest first."""
+    same = [i for i in items if i["kind"] == item["kind"] and not i["draft"]]
+    idx = next((n for n, i in enumerate(same) if i["path"] == item["path"]), None)
+    if idx is None:
+        return "\n"
+    newer = same[idx - 1] if idx > 0 else None
+    older = same[idx + 1] if idx + 1 < len(same) else None
+    if not newer and not older:
+        return "\n"
+    out = ['\n  <nav class="pagenav">\n']
+    if older:
+        out.append(f'    <a class="prev" href="{older["url"]}">'
+                   f'<span>Previous</span>{older["title"]}</a>\n')
+    if newer:
+        out.append(f'    <a class="next" href="{newer["url"]}">'
+                   f'<span>Next</span>{newer["title"]}</a>\n')
+    out.append('  </nav>\n')
+    return "".join(out)
+
+
 # ---------------------------------------------------------------- checker
 
 def check_links(path, text):
@@ -259,6 +281,19 @@ def build(write=True):
                 err(rel(p), f"no <!--#{name}--> markers, run --init")
                 continue
             text, _ = replace_block(text, name, "\n" + body + "\n")
+
+        # previous / next. if the page has no markers yet we add an empty
+        # pair before </main>. that insertion only ever adds, so unlike --init
+        # it cannot swallow anything that was already on the page.
+        mine = next((i for i in items if i["path"] == rel(p)), None)
+        if mine:
+            if "<!--#nav-->" not in text:
+                if "</main>" in text:
+                    text = text.replace(
+                        "</main>", "<!--#nav-->\n<!--#/nav-->\n\n</main>", 1)
+                else:
+                    err(rel(p), "no </main>, cannot place the nav markers")
+            text, _ = replace_block(text, "nav", nav_for(mine, items))
 
         for m in re.finditer(r"<!--#cards:([a-z]+:[a-z0-9]+)-->", text):
             text, _ = replace_block(text, "cards:" + m.group(1),
