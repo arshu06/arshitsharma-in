@@ -395,11 +395,21 @@ def build(write=True):
             if "<!--#reply-->" not in text:
                 text = text.replace(
                     "</main>", "<!--#reply-->\n<!--#/reply-->\n\n</main>", 1)
-            # nav sits above the form: reading first, then the thing you do
-            # once you have finished reading.
             if "<!--#nav-->" not in text:
                 text = text.replace(
                     "<!--#reply-->", "<!--#nav-->\n<!--#/nav-->\n\n<!--#reply-->", 1)
+
+            # nav belongs above the form: reading first, then the thing you do
+            # once you have finished reading. pages built before that decision
+            # have them the other way round, so lift the nav block into place.
+            # only the two generated blocks move, never a line of your prose.
+            if text.index("<!--#reply-->") < text.index("<!--#nav-->"):
+                a = text.index("<!--#nav-->")
+                b = text.index("<!--#/nav-->") + len("<!--#/nav-->")
+                navblock = text[a:b]
+                text = (text[:a].rstrip("\n") + "\n\n" + text[b:]).replace(
+                    "<!--#reply-->", navblock + "\n\n<!--#reply-->", 1)
+
             text, _ = replace_block(text, "nav", nav_for(mine, items))
             text, _ = replace_block(text, "reply", reply_form(mine))
 
