@@ -296,7 +296,21 @@ main > .sec-label:first-child{margin-top:0}
   padding:20px 0;border-bottom:1px solid var(--rule);
 }
 .post:first-of-type{padding-top:0}
-.post.noimg{grid-template-columns:1fr}
+/* a card with no photograph. thin weeks and weeks where nothing got
+   photographed are part of the deal, so this has to look like a decision
+   rather than a missing image. same left mark as the front page teaser,
+   and it sheds the bottom rule so it reads as its own block. */
+.post.noimg{
+  grid-template-columns:1fr;
+  border-bottom:none;
+  border-left:3px solid var(--mark);
+  background:var(--wash);
+  padding:20px 22px;
+  margin:20px 0;
+}
+.post.noimg:first-of-type{margin-top:0}
+.post.noimg h2{font-size:1.24rem}
+.post.noimg .kicker{margin-bottom:8px}
 .post img{width:132px;height:99px;object-fit:cover}
 .post .ph{width:132px;height:99px}
 .post h2{font-family:var(--display);font-weight:600;font-size:1.3rem;letter-spacing:-.015em;line-height:1.2;margin:0 0 5px}
@@ -365,3 +379,8 @@ main > .sec-label:first-child{margin-top:0}
   .pagenav{flex-direction:column;gap:22px}
   .pagenav .next{text-align:left}
 }
+
+/* footer links row, sits under the copyright line */
+.foot-links{font-family:var(--mono);font-size:.74rem;letter-spacing:.04em}
+.foot-links a{color:var(--faint);text-decoration:none;border-bottom:1px solid transparent}
+.foot-links a:hover{color:var(--mark);border-bottom-color:var(--mark)}
