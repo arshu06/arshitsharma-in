@@ -376,8 +376,12 @@ main > .sec-label:first-child{margin-top:0}
 .pagenav a:hover{color:var(--mark)}
 .pagenav .next{text-align:right;margin-left:auto}
 @media (max-width:520px){
-  .pagenav{flex-direction:column;gap:22px}
-  .pagenav .next{text-align:left}
+  /* stacked, the flex-basis above becomes a HEIGHT in a column container and
+     grow then stretches it further, which is what left a 240px hole under each
+     link. reset both, and drop the auto margin that was shoving next right. */
+  .pagenav{flex-direction:column;gap:20px}
+  .pagenav a{flex:0 0 auto;width:100%}
+  .pagenav .next{text-align:left;margin-left:0}
 }
 
 /* footer links row, sits under the copyright line */
